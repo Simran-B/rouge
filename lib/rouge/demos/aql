@@ -1,0 +1,4 @@
+FOR v, e, p IN 1..2 OUTBOUND "Users/1" knows
+    PRUNE !e.`like`
+    OPTIONS { bfs: true, uniqueVertices: 'global' }
+    RETURN v.name
