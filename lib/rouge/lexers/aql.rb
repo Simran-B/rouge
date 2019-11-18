@@ -9,7 +9,25 @@ module Rouge
       #mimetypes 'text/x-aql'
 
       title 'AQL'
-      desc 'ArangoDB Query Language'
+      desc 'ArangoDB Query Language v3.5'
+
+# Keyword.Declaration LET
+# Name.Variable Variables like LET, FOR, COLLECT?
+# Keyword.Pseudo COUNT, KEEP, PRUNE, SEARCH, TO, OPTIONS
+# Keyword.Constant TRUE FALSE NULL?
+# Keyword _everything else?_
+# Operator.Word AND OR NOT IN (ALL, ANY, NONE)?
+# Operator +-/* etc.
+# Punctuation .,:: etc., also ([{}])?
+# Name.Function FUNC()
+# Name.Builtin.Pseudo? CURRENT, NEW, OLD
+# Name.Property / Name.Label? @bind @@params
+# Literal.String.Backtick / Literal.String.Double / Literal.String.Single --> Literal.String?
+# Literal.String.Escape?
+# Literal.String.Regex --> Literal.String?
+# Literal.Number _any number_
+# Comment.Single //
+# Comment.Multiline /* */
 
       state :multiline_comment do
         rule %r([*]/), Comment::Multiline, :pop!
@@ -42,16 +60,15 @@ module Rouge
       # pseudo-keywords, case insensitive
       # KEEP PRUNE SEARCH TO
 
-      # pseudo-varaibles, case sensitive
+      # pseudo-variables, case sensitive
       # CURRENT NEW OLD
 
       # pseudo-keyword
       # OPTIONS {...}
 
       state :root do
-        rule %r((?<=\n)(?=\s|/|<!--)), Text, :expr_start
         mixin :comments_and_whitespace
-        rule %r(\*{2,} | [=!]~ | [!=<>]=? | && | \|\| | [-+*/%] )x,
+        rule %r( [-+/%] | [*]+ | [!=<>]=? | && | \|\| | [=!]~ )x,
           Operator, :expr_start
         rule %r/[(\[{]/, Punctuation, :expr_start
         rule %r/[)\]}]/, Punctuation
